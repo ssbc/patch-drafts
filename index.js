@@ -20,7 +20,7 @@ const create = (api) => {
 
   function getSync (msgKey) {
     _initialise()
-    return get(_drafts(), path)
+    return get(_drafts(), msgKey)
   }
 
   function setSync (msgKey, text) {
