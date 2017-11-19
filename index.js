@@ -1,5 +1,4 @@
 const nest = require('depnest')
-const { Value, computed } = require('mutant')
 const get = require('lodash.get')
 const merge = require('lodash.merge')
 
@@ -20,7 +19,7 @@ const create = (api) => {
 
   function getSync (msgKey) {
     _initialise()
-    var d = get(_drafts(), msgKey)
+    var d = get(_drafts, msgKey)
     if (typeof d === "undefined") return ""
     return  d
   }
@@ -28,22 +27,18 @@ const create = (api) => {
   function setSync (msgKey, text) {
     _initialise()
 
-    const updatedDrafts = merge({}, _drafts(), {
+    _drafts = merge({}, _drafts, {
       [msgKey]: text
     })
-    _drafts.set(updatedDrafts)
   }
 
   function _initialise () {
     if (_drafts) return
 
-    const settings = localStorage[STORAGE_KEY]
+    const drafts = localStorage[STORAGE_KEY]
       ? JSON.parse(localStorage[STORAGE_KEY])
       : {}
-    _drafts = Value(settings)
-
-    // initialise a listener to persist on changes
-    _drafts(_save)
+    _drafts = drafts
   }
 
   function _save (newDrafts) {
