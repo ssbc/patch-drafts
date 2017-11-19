@@ -19,9 +19,7 @@ const create = (api) => {
 
   function getSync (msgKey) {
     _initialise()
-    var d = get(_drafts, msgKey)
-    if (typeof d === "undefined") return ""
-    return  d
+    return _drafts[msgKey]
   }
 
   function setSync (msgKey, text) {
