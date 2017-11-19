@@ -1,5 +1,4 @@
 const nest = require('depnest')
-const get = require('lodash.get')
 const merge = require('lodash.merge')
 
 const STORAGE_KEY = 'patchDrafts'
