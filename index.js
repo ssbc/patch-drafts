@@ -6,6 +6,7 @@ const STORAGE_KEY = 'patchDrafts'
 const gives = nest({
   'drafts.sync.get': true,
   'drafts.sync.set': true,
+  'drafts.sync.remove': true,
 })
 
 const create = (api) => {
@@ -14,19 +15,30 @@ const create = (api) => {
   return nest({
     'drafts.sync.get': getSync,
     'drafts.sync.set': setSync,
+    'drafts.sync.remove': removeSync
   })
 
-  function getSync (msgKey) {
+  function getSync (draftKey) {
     _initialise()
-    return _drafts[msgKey]
+    return _drafts[_normaliseKey(draftKey)]
   }
 
-  function setSync (msgKey, text) {
+  function setSync (draftKey, text) {
     _initialise()
 
     _drafts = merge({}, _drafts, {
-      [msgKey]: text
+      [_normaliseKey(draftKey)]: text
     })
+
+   _save(_drafts)
+  }
+
+  function removeSync (draftKey) {
+    _initialise()
+
+    delete _drafts[_normaliseKey(draftKey)]
+
+   _save(_drafts)
   }
 
   function _initialise () {
@@ -40,6 +52,13 @@ const create = (api) => {
 
   function _save (newDrafts) {
     localStorage[STORAGE_KEY]= JSON.stringify(newDrafts)
+  }
+
+  function _normaliseKey (key) {
+    if (typeof key === 'string') return key
+    if (typeof key === 'object') return JSON.stringify(key) // This could also be a hash of the object?
+  
+    throw new Error ('patch-drafts keys need to be strings or objects')
   }
 }
 
