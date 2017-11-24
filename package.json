@@ -1,6 +1,6 @@
 {
   "name": "patch-drafts",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "localStorge based drafts module for patch-* related apps",
   "main": "index.js",
   "scripts": {
